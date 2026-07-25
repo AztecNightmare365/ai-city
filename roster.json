@@ -1,0 +1,111 @@
+{
+  "_comment": "AI City roster. Edit freely - the bridge reloads it on restart, and the tower rebuilds with however many floors this file (plus auto-discovered reporters) defines. `id` MUST match the cloud routine name exactly (underscores, not hyphens) or its floor will never light. Verified against the live RemoteTrigger list 2026-07-24. `at` is the ET shift time (HH:MM) used to order tower floors bottom-to-top and to light a floor during its shift window. `type`: daily | weekly | service. Weekly routines render as the penthouse boardroom. Unknown agents that report events get appended here automatically with discovered:true - rename them, don't delete them, or they'll just come back.",
+  "_cloud": "All ten trading routines run as claude.ai cloud routines (RemoteTrigger / claude.ai Routines), NOT local scheduled tasks. Their cron expressions are in UTC; the `at` times below are the ET equivalents. They share the git repo github.com/AztecNightmare365/claude-trading-tasks and commit handoffs + trade_log.csv to it on every run.",
+  "agents": [
+    {
+      "id": "robinhood_0700_overnight",
+      "district": "trading",
+      "at": "07:00",
+      "name": "Overnight Desk",
+      "type": "daily",
+      "role": "Reads overnight positions and the after-hours update, scans overnight news, fetches pre-market prices, writes the overnight brief. Can place pre-market limit sells in catastrophic situations."
+    },
+    {
+      "id": "robinhood_0915_premarket",
+      "district": "trading",
+      "at": "09:15",
+      "name": "Pre-Market Desk",
+      "type": "daily",
+      "role": "Pre-market data via Polygon, flags critical situations, writes the pre-market brief. Places no orders."
+    },
+    {
+      "id": "robinhood_0930_open",
+      "district": "trading",
+      "at": "09:30",
+      "name": "Bell Desk",
+      "type": "daily",
+      "role": "Fires at the opening bell - enforces stops and take-profits against the open print, enters confirmed catalyst watch-list positions."
+    },
+    {
+      "id": "robinhood_1000_trading",
+      "district": "trading",
+      "at": "10:00",
+      "name": "Open Desk",
+      "type": "daily",
+      "role": "Main morning session: market regime gate, candidate sourcing via Polygon, order placement, handoff write."
+    },
+    {
+      "id": "robinhood_1200_trading",
+      "district": "trading",
+      "at": "12:00",
+      "name": "Midday Desk",
+      "type": "daily",
+      "role": "Midday reassessment and stop-trailing, may open new positions."
+    },
+    {
+      "id": "robinhood_1300_monitor",
+      "district": "trading",
+      "at": "13:00",
+      "name": "Watch 1",
+      "type": "daily",
+      "role": "Stop-loss / take-profit monitor. Sells only - never opens positions."
+    },
+    {
+      "id": "robinhood_1400_monitor",
+      "district": "trading",
+      "at": "14:00",
+      "name": "Watch 2",
+      "type": "daily",
+      "role": "Stop-loss / take-profit monitor. Sells only - never opens positions."
+    },
+    {
+      "id": "robinhood_1515_trading",
+      "district": "trading",
+      "at": "15:15",
+      "name": "Close Desk",
+      "type": "daily",
+      "role": "End-of-day: overnight hold/exit evaluation, final order placement, handoff to tomorrow's 10 AM desk."
+    },
+    {
+      "id": "robinhood_1700_afterhours",
+      "district": "trading",
+      "at": "17:00",
+      "name": "After-Hours Desk",
+      "type": "daily",
+      "role": "After-hours prices and earnings results, assesses AH exits, builds tomorrow's catalyst watch list, places AH limit sells."
+    },
+    {
+      "id": "robinhood_weekly_review",
+      "district": "trading",
+      "at": "10:00",
+      "name": "The Boardroom",
+      "type": "weekly",
+      "role": "Saturday performance review - reads the trade log, computes per-dimension stats, writes LEARNED INSIGHTS back into the trading routines."
+    },
+    {
+      "id": "city_market_watch",
+      "district": "trading",
+      "name": "Market Watch",
+      "type": "service",
+      "role": "The tower's data feed - a cloud routine that reads the Robinhood account and commits city-state.json to the trading repo, so the city stays truthful even when this laptop is asleep."
+    },
+    {
+      "id": "hub",
+      "district": "hub",
+      "name": "Hub HQ",
+      "role": "Dashboard backend, vault, note organizer."
+    },
+    {
+      "id": "dictaflow",
+      "district": "studio",
+      "name": "DictaFlow Studio",
+      "role": "Voice capture and Claude cleanup."
+    },
+    {
+      "id": "optiplex",
+      "district": "factory",
+      "name": "Factory",
+      "role": "OptiPlex 790 - idle, awaiting work."
+    }
+  ]
+}
