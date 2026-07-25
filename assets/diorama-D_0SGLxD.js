@@ -1,4 +1,4 @@
-import{A as e,B as t,C as n,D as r,E as i,F as a,G as o,H as s,I as c,N as l,O as u,S as d,U as f,W as p,_ as m,a as h,c as g,d as _,f as v,h as y,i as ee,k as te,l as b,n as x,o as S,p as C,r as w,s as T,t as E,v as D,w as O,x as ne,y as re}from"./BufferGeometryUtils-DZYf7ubo.js";var k={name:`CopyShader`,uniforms:{tDiffuse:{value:null},opacity:{value:1}},vertexShader:`
+import{A as e,B as t,C as n,D as r,E as i,F as a,G as o,H as s,I as c,N as l,O as u,S as d,U as f,W as p,_ as m,a as h,c as g,d as _,f as v,h as y,i as ee,k as te,l as b,n as x,o as S,p as C,r as w,s as T,t as E,v as D,w as O,x as ne,y as re}from"./BufferGeometryUtils-CQT_ibYB.js";var k={name:`CopyShader`,uniforms:{tDiffuse:{value:null},opacity:{value:1}},vertexShader:`
 
 		varying vec2 vUv;
 
