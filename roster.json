@@ -1,6 +1,6 @@
 {
-  "_comment": "AI City roster. Edit freely - the bridge reloads it on restart, and the tower rebuilds with however many floors this file (plus auto-discovered reporters) defines. `id` MUST match the cloud routine name exactly (underscores, not hyphens) or its floor will never light. Verified against the live RemoteTrigger list 2026-07-24. `at` is the ET shift time (HH:MM) used to order tower floors bottom-to-top and to light a floor during its shift window. `type`: daily | weekly | service. Weekly routines render as the penthouse boardroom. Unknown agents that report events get appended here automatically with discovered:true - rename them, don't delete them, or they'll just come back.",
-  "_cloud": "All ten trading routines run as claude.ai cloud routines (RemoteTrigger / claude.ai Routines), NOT local scheduled tasks. Their cron expressions are in UTC; the `at` times below are the ET equivalents. They share the git repo github.com/AztecNightmare365/claude-trading-tasks and commit handoffs + trade_log.csv to it on every run.",
+  "_comment": "AI City roster. Edit freely - the bridge reloads it on restart, and the tower rebuilds with however many floors this file (plus auto-discovered reporters) defines. `id` MUST match the cloud routine name exactly (underscores, not hyphens) or its floor will never light. Verified against the live RemoteTrigger list 2026-08-03. `at` is the ET shift time (HH:MM) used to order tower floors bottom-to-top and to light a floor during its shift window. `type`: daily | weekly | service. Weekly routines render as the penthouse boardroom. `retired` marks a routine that has been switched off - it KEEPS its floor, permanently dark, because the city is a record of what runs here, not only what is running today. Unknown agents that report events get appended here automatically with discovered:true - rename them, don't delete them, or they'll just come back.",
+  "_cloud": "Five daily trading routines run as claude.ai cloud routines (RemoteTrigger), NOT local scheduled tasks: 07:00 overnight, 09:30 open, 10:00 trading, 12:00 trading, 15:15 close, plus the Saturday weekly review. Four dailies plus city_market_watch were RETIRED 2026-07-29 to cut usage. Cron expressions are in UTC; the `at` times below are the ET equivalents. They share the git repo github.com/AztecNightmare365/claude-trading-tasks and commit handoffs + trade_log.csv to it on every run. The 09:30 and 15:15 desks also write city-state.json, which is what makes hand-bought positions visible in the city.",
   "agents": [
     {
       "id": "robinhood_0700_overnight",
@@ -8,7 +8,7 @@
       "at": "07:00",
       "name": "Overnight Desk",
       "type": "daily",
-      "role": "Reads overnight positions and the after-hours update, scans overnight news, fetches pre-market prices, writes the overnight brief. Can place pre-market limit sells in catastrophic situations."
+      "role": "Reads overnight positions from the 3:15 PM handoff, scans overnight news, fetches pre-market prices, writes the overnight brief. Since the 9:15 AM desk retired this is the only pre-open written analysis. Can place pre-market limit sells in catastrophic situations."
     },
     {
       "id": "robinhood_0915_premarket",
@@ -16,7 +16,9 @@
       "at": "09:15",
       "name": "Pre-Market Desk",
       "type": "daily",
-      "role": "Pre-market data via Polygon, flags critical situations, writes the pre-market brief. Places no orders."
+      "retired": "2026-07-29",
+      "retiredWhy": "Retired to cut usage. Its pre-open analysis is folded into the 7 AM Overnight Desk brief.",
+      "role": "Pre-market data via Polygon, flagged critical situations, wrote the pre-market brief. Placed no orders."
     },
     {
       "id": "robinhood_0930_open",
@@ -24,7 +26,7 @@
       "at": "09:30",
       "name": "Bell Desk",
       "type": "daily",
-      "role": "Fires at the opening bell - enforces stops and take-profits against the open print, enters confirmed catalyst watch-list positions."
+      "role": "Fires at the opening bell - enforces stops and take-profits against the open print, enters confirmed catalyst watch-list positions. Also writes city-state.json, the city's live account feed."
     },
     {
       "id": "robinhood_1000_trading",
@@ -32,7 +34,7 @@
       "at": "10:00",
       "name": "Open Desk",
       "type": "daily",
-      "role": "Main morning session: market regime gate, candidate sourcing via Polygon, order placement, handoff write."
+      "role": "Main morning session: market regime gate, candidate sourcing via Polygon, order placement, handoff write. Its SKILL.md holds the handoff block the city parses."
     },
     {
       "id": "robinhood_1200_trading",
@@ -40,7 +42,7 @@
       "at": "12:00",
       "name": "Midday Desk",
       "type": "daily",
-      "role": "Midday reassessment and stop-trailing, may open new positions."
+      "role": "Midday reassessment and stop-trailing, may open new positions. Since the 1 PM and 2 PM monitors retired this is the last stop check before 3:15 PM, so its trailing levels have to stand unattended for three hours."
     },
     {
       "id": "robinhood_1300_monitor",
@@ -48,7 +50,9 @@
       "at": "13:00",
       "name": "Watch 1",
       "type": "daily",
-      "role": "Stop-loss / take-profit monitor. Sells only - never opens positions."
+      "retired": "2026-07-29",
+      "retiredWhy": "Retired to cut usage. Stop coverage from noon to 3:15 PM is now the Midday Desk's trailing levels.",
+      "role": "Stop-loss / take-profit monitor. Sold only - never opened positions."
     },
     {
       "id": "robinhood_1400_monitor",
@@ -56,7 +60,9 @@
       "at": "14:00",
       "name": "Watch 2",
       "type": "daily",
-      "role": "Stop-loss / take-profit monitor. Sells only - never opens positions."
+      "retired": "2026-07-29",
+      "retiredWhy": "Retired to cut usage. Stop coverage from noon to 3:15 PM is now the Midday Desk's trailing levels.",
+      "role": "Stop-loss / take-profit monitor. Sold only - never opened positions."
     },
     {
       "id": "robinhood_1515_trading",
@@ -64,7 +70,7 @@
       "at": "15:15",
       "name": "Close Desk",
       "type": "daily",
-      "role": "End-of-day: overnight hold/exit evaluation, final order placement, handoff to tomorrow's 10 AM desk."
+      "role": "Last session of the day: overnight hold/exit evaluation, final order placement, handoff to tomorrow. Also writes city-state.json. Its handoff has to stand alone overnight now that the 5 PM desk is retired."
     },
     {
       "id": "robinhood_1700_afterhours",
@@ -72,7 +78,9 @@
       "at": "17:00",
       "name": "After-Hours Desk",
       "type": "daily",
-      "role": "After-hours prices and earnings results, assesses AH exits, builds tomorrow's catalyst watch list, places AH limit sells."
+      "retired": "2026-07-29",
+      "retiredWhy": "Retired to cut usage. The Close Desk handoff now has to carry overnight on its own.",
+      "role": "After-hours prices and earnings results, assessed AH exits, built the next day's catalyst watch list, placed AH limit sells."
     },
     {
       "id": "robinhood_weekly_review",
@@ -87,7 +95,9 @@
       "district": "trading",
       "name": "Market Watch",
       "type": "service",
-      "role": "The tower's data feed - a cloud routine that reads the Robinhood account and commits city-state.json to the trading repo, so the city stays truthful even when this laptop is asleep."
+      "retired": "2026-07-29",
+      "retiredWhy": "Retired after running 65 sessions/week - the main cause of the usage blowout. Replaced by a zero-token parse: the bridge reads city-state.json (written free by the 9:30 AM and 3:15 PM desks) plus the 3:15 PM handoff block. The name is kept as the byline on portfolio events.",
+      "role": "Was the tower's data feed - a cloud routine that read the Robinhood account hourly and committed city-state.json."
     },
     {
       "id": "hub",
